@@ -15,12 +15,12 @@ We will be using the following datasets to train and test our fire detection mod
 | [**FIRE Dataset**](https://www.kaggle.com/datasets/phylake1337/fire-dataset) | Contains fire and non-fire images, including flames, smoke, and indoor/outdoor scenes. | 755 |
 | [**Cyclone Wildfire Flood Earthquake Database**](https://www.kaggle.com/datasets/rupakroy/cyclone-wildfire-flood-earthquake-database) | Includes wildfire images for testing the model. | 152 |
 
-We will use the FIRE dataset to train a Convolutional Neural Network (CNN) model to classify images as either fire or non-fire.
-
-
 ## 🔍 Solution Strategy
 
-To identify fires in the images, our suggested solution involves the usage of computer vision techniques like image classification and object detection. We will use the FIRE dataset to train a Convolutional Neural Network (CNN) model to classify images as either fire or non-fire.
+To identify fires in the images, our suggested solution involves the usage of computer vision techniques like image classification and object detection.
+
+- We will use the FIRE dataset to train a Convolutional Neural Network (CNN) model to classify images as either fire or non-fire.
+- We will also use this Cyclone-Wildfire-Flood-Earthquake Database to test our model against wildfire images.
 
 ## 👥 Group Members
 
