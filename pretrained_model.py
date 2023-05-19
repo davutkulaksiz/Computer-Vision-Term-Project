@@ -9,7 +9,7 @@ from torch.utils.data import random_split
 from torch.utils.data import Dataset
 from torch.utils.data.dataloader import DataLoader
 from PIL import Image
-from sklearn.metrics import accuracy_score, confusion_matrix
+from sklearn.metrics import accuracy_score, confusion_matrix, f1_score, precision_score, recall_score
 import numpy as np
 
 # dataset structure
@@ -120,6 +120,8 @@ for epoch in range(3):
     print('Epoch %d loss: %.3f' % (epoch + 1, running_loss / len(train_dataloader)))
 
 
+torch.save(model, "pretrained_model.pth")
+
 # Validation
 model.eval()
 val_predictions = []
@@ -151,17 +153,26 @@ with torch.no_grad():
     test_acc = accuracy_score(test_targets, test_predictions) * 100
     print(f'Test accuracy: {test_acc:.3f}%')
 
+    # Calculate F1 score, precision and recall
+    f1 = f1_score(test_targets, test_predictions)
+    precision = precision_score(test_targets, test_predictions)
+    recall = recall_score(test_targets, test_predictions)
+
+    print(f'F1 Score: {f1:.3f}%')
+    print(f'Precision: {precision:.3f}%')
+    print(f'Recall: {recall:.3f}%')
+
     # Compute confusion matrix for test set
     cm = confusion_matrix(test_targets, test_predictions)
 
     # Plot confusion matrix
-    fig, ax = plt.subplots(figsize=(8, 8))
+    fig, ax = plt.subplots(figsize=(2, 2))
     im = ax.imshow(cm, interpolation='nearest', cmap=plt.cm.Blues)
     ax.figure.colorbar(im, ax=ax)
     ax.set(xticks=np.arange(cm.shape[1]),
            yticks=np.arange(cm.shape[0]),
-           xticklabels=np.arange(8),
-           yticklabels=np.arange(8),
+           xticklabels=np.arange(2),
+           yticklabels=np.arange(2),
            title='Confusion matrix',
            ylabel='True label',
            xlabel='Predicted label')
