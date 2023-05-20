@@ -18,3 +18,11 @@
 
 # Confusion Matrix
 ![confusion matrix](pretrained_cm.png)
+
+# Other info
+|                |         |
+|----------------|---------|
+| Criterion   | Cross Entropy Loss   |
+| Optimizer   | SGD   |
+| Learning Rate   | 0.001   |
+| Batch Size   | 16   |

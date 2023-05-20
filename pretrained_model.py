@@ -49,6 +49,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 # parameters
 TENSOR_SIZE = 128
 BATCH_SIZE = 16
+LEARNING_RATE = 0.01
 
 dataset_path = './D-Fire'
 
@@ -86,7 +87,7 @@ validation_dataloader = DataLoader(validation_dataset, batch_size = BATCH_SIZE *
 test_dataloader = DataLoader(test_dataset, batch_size = BATCH_SIZE * 2, pin_memory = True)
 
 # model init
-model = models.resnet50(weights=models.ResNet50_Weights.DEFAULT)
+model = models.resnet50(weights=models.ResNet50_Weights.IMAGENET1K_V2)
 
 # freeze all layers except fc
 for param in model.parameters():
@@ -98,7 +99,7 @@ model = model.to(device)
 
 # Define optimizer and loss function
 criterion = nn.CrossEntropyLoss()
-optimizer = optim.SGD(model.fc.parameters(), lr=0.001, momentum=0.9)
+optimizer = optim.Adam(model.fc.parameters(), lr=LEARNING_RATE)
 
 # Training
 for epoch in range(3):
