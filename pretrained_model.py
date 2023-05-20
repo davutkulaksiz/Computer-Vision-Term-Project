@@ -48,8 +48,8 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # parameters
 TENSOR_SIZE = 128
-BATCH_SIZE = 16
-LEARNING_RATE = 0.01
+BATCH_SIZE = 32
+LEARNING_RATE = 0.001
 
 dataset_path = './D-Fire'
 

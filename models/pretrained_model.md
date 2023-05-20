@@ -1,19 +1,19 @@
 # Epoch losses
 |                |         |
 |----------------|---------|
-| Epoch 1 loss   | 0.312   |
-| Epoch 2 loss   | 0.251   |
-| Epoch 3 loss   | 0.230   |
+| Epoch 1 loss   | 0.268   |
+| Epoch 2 loss   | 0.215   |
+| Epoch 3 loss   | 0.207   |
 
 
 # Metrics
 |                |         |
 |----------------|---------|
-| Validation accuracy   | 92.182%   |
-| Test accuracy   | 92.419%   |
-| F1 Score   | 0.851   |
-| Precision   | 0.879   |
-| Recall   | 0.826   |
+| Validation accuracy   | 92.743%   |
+| Test accuracy   | 93.496%   |
+| F1 Score   | 0.878   |
+| Precision   | 0.868   |
+| Recall   | 0.888   |
 
 
 # Confusion Matrix
@@ -23,6 +23,6 @@
 |                |         |
 |----------------|---------|
 | Criterion   | Cross Entropy Loss   |
-| Optimizer   | SGD   |
+| Optimizer   | Adam   |
 | Learning Rate   | 0.001   |
-| Batch Size   | 16   |
+| Batch Size   | 32   |
