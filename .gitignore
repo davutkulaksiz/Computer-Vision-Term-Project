@@ -1,4 +1,5 @@
 /D-Fire
+/fire_dataset
 image_classification_model.pth
 models/pretrained_model.pth
 pretrained_model.pth

@@ -11,6 +11,7 @@ from torch.utils.data.dataloader import DataLoader
 from PIL import Image
 from sklearn.metrics import accuracy_score, confusion_matrix, f1_score, precision_score, recall_score
 import numpy as np
+import matplotlib.pyplot as plt
 
 # dataset structure
 class FireClassificationDataset(Dataset):
@@ -47,8 +48,8 @@ class FireClassificationDataset(Dataset):
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # parameters
-TENSOR_SIZE = 128
-BATCH_SIZE = 32
+TENSOR_SIZE = 256
+BATCH_SIZE = 64
 LEARNING_RATE = 0.001
 
 dataset_path = './D-Fire'
@@ -57,8 +58,8 @@ transform = Compose([
     Resize((TENSOR_SIZE, TENSOR_SIZE)),
     ToTensor(),
     RandomHorizontalFlip(p=0.5),
-    RandomRotation(degrees=15),
-    ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.02),
+    RandomRotation(degrees=10),
+    ColorJitter(brightness=0.1, contrast=0.1, saturation=0.1, hue=0.1),
     Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 ])
 
@@ -77,21 +78,24 @@ test_size = len(test_dataset) - validation_size
 
 test_dataset, validation_dataset = random_split(test_dataset, [test_size, validation_size])
 
-print(len(train_dataset))
-print(len(validation_dataset))
-print(len(test_dataset))
-
 # setup the dataloaders
 train_dataloader = DataLoader(train_dataset, batch_size = BATCH_SIZE, shuffle = True, pin_memory = True)
 validation_dataloader = DataLoader(validation_dataset, batch_size = BATCH_SIZE * 2, pin_memory = True)
 test_dataloader = DataLoader(test_dataset, batch_size = BATCH_SIZE * 2, pin_memory = True)
 
 # model init
-model = models.resnet50(weights=models.ResNet50_Weights.IMAGENET1K_V2)
+model = models.resnet101(weights=models.ResNet101_Weights.IMAGENET1K_V2)
 
-# freeze all layers except fc
+# freeze all the layers
 for param in model.parameters():
     param.requires_grad = False
+
+# Unfreeze the last two layers
+for param in model.layer4.parameters():
+    param.requires_grad = True
+
+for param in model.fc.parameters():
+    param.requires_grad = True
 
 num_classes = 2 # fire or no fire
 model.fc = nn.Linear(model.fc.in_features, num_classes)
@@ -99,12 +103,16 @@ model = model.to(device)
 
 # Define optimizer and loss function
 criterion = nn.CrossEntropyLoss()
-optimizer = optim.Adam(model.fc.parameters(), lr=LEARNING_RATE)
+optimizer = optim.Adam(filter(lambda p: p.requires_grad, model.parameters()), lr=LEARNING_RATE)
 
+losses = []
+accuracies = []
 # Training
-for epoch in range(3):
+for epoch in range(10):
     model.train()
     running_loss = 0.0
+    running_accuracy = 0.0
+    total_samples = 0
     for i, (inputs, labels) in enumerate(train_dataloader):
         inputs, labels = inputs.to(device), labels.to(device)
 
@@ -114,12 +122,37 @@ for epoch in range(3):
 
         loss = criterion(outputs, labels)
         loss.backward()
+
         running_loss += loss.item()
+        _, predicted = outputs.max(1)
+        running_accuracy += predicted.eq(labels).sum().item()
+        total_samples += labels.size(0)
 
         optimizer.step()
+    
+    average_loss = running_loss / len(train_dataloader)
+    average_accuracy = running_accuracy / total_samples
+    losses.append(average_loss)
+    accuracies.append(average_accuracy)
 
     print('Epoch %d loss: %.3f' % (epoch + 1, running_loss / len(train_dataloader)))
 
+
+plt.figure(figsize=(10, 5))
+plt.subplot(1, 2, 1)
+plt.plot(range(1, len(losses) + 1), losses)
+plt.xlabel('Epoch')
+plt.ylabel('Loss')
+plt.title('Training Loss')
+
+plt.subplot(1, 2, 2)
+plt.plot(range(1, len(accuracies) + 1), accuracies)
+plt.xlabel('Epoch')
+plt.ylabel('Accuracy')
+plt.title('Training Accuracy')
+
+plt.tight_layout()
+plt.show()
 
 torch.save(model, "pretrained_model.pth")
 
@@ -136,8 +169,6 @@ with torch.no_grad():
         val_targets.extend(labels.cpu().numpy())
     val_acc = accuracy_score(val_targets, val_predictions) * 100
     print(f'Validation accuracy: {val_acc:.3f}%')
-
-import matplotlib.pyplot as plt
 
 
 # testing
