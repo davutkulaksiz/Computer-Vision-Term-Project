@@ -1,0 +1,7 @@
+path: '/content/drive/MyDrive/BBM416 - Computer Vision Project/D-Fire'
+train: 'train'
+val: 'test'
+
+names:
+  0: fire
+  1: smoke
