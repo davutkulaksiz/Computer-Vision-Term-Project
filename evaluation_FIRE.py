@@ -7,6 +7,7 @@ from torch.utils.data.dataloader import DataLoader
 from sklearn.metrics import accuracy_score, confusion_matrix, f1_score, precision_score, recall_score
 import matplotlib.pyplot as plt
 import numpy as np
+import time
 
 class FIREDataset(Dataset):
     def __init__(self, root_dir, transform = None):
@@ -70,13 +71,30 @@ dataset_loader = DataLoader(dataset, batch_size = BATCH_SIZE, shuffle = True, pi
 
 predictions = []
 targets = []
+total_inference_time = 0.0
+
 with torch.no_grad():
     for inputs, labels in dataset_loader:
         inputs, labels = inputs.to(device), labels.to(device)
+
+        start_time = time.time()
         outputs = model(inputs)
+        end_time = time.time()
+        batch_inference_time = end_time - start_time
+        total_inference_time += batch_inference_time
+
         _, predicted = torch.max(outputs, 1)
         predictions.extend(predicted.cpu().numpy())
         targets.extend(labels.cpu().numpy())
+
+    # Calculate inference time per image
+    num_images = len(dataset)
+    inference_time_per_image = total_inference_time / num_images
+
+    print(f'Total inference time: {total_inference_time:.3f} seconds')
+    print(f'Inference time per image: {inference_time_per_image:.6f} seconds')
+    
+    # accuracy
     test_acc = accuracy_score(targets, predictions) * 100
     print(f'Test accuracy: {test_acc:.3f}%')
 
@@ -85,9 +103,9 @@ with torch.no_grad():
     precision = precision_score(targets, predictions)
     recall = recall_score(targets, predictions)
 
-    print(f'F1 Score: {f1:.3f}%')
-    print(f'Precision: {precision:.3f}%')
-    print(f'Recall: {recall:.3f}%')
+    print(f'F1 Score: {f1:.3f}')
+    print(f'Precision: {precision:.3f}')
+    print(f'Recall: {recall:.3f}')
 
     # Compute confusion matrix for test set
     cm = confusion_matrix(targets, predictions)
@@ -113,3 +131,39 @@ with torch.no_grad():
     fig.tight_layout()
     plt.show()
 
+
+# Showcase sample images with predicted labels
+num_samples = 5  # Number of sample images to showcase
+sample_indices = np.random.choice(len(dataset), num_samples, replace=False)
+
+plt.figure(figsize=(12, 8))
+for i, index in enumerate(sample_indices):
+    image, label = dataset[index]
+    image = image.permute(1, 2, 0).numpy()  # Convert tensor to numpy array
+    predicted_label = predictions[index]
+
+    plt.subplot(1, num_samples, i + 1)
+    plt.imshow(image)
+    plt.title(f"Predicted: {predicted_label}, True: {label}")
+    plt.axis("off")
+
+plt.tight_layout()
+plt.show()
+
+
+# Get misclassified indices
+misclassified_indices = np.where(targets != predictions)[0]
+
+plt.figure(figsize=(12, 8))
+for i, index in enumerate(misclassified_indices):
+    image, label = dataset[index]
+    image = image.permute(1, 2, 0).numpy()  # Convert tensor to numpy array
+    predicted_label = predictions[index]
+
+    plt.subplot(1, len(misclassified_indices), i + 1)
+    plt.imshow(image)
+    plt.title(f"Predicted: {predicted_label}, True: {label}")
+    plt.axis("off")
+
+plt.tight_layout()
+plt.show()

@@ -28,3 +28,20 @@ To identify fires and smoke in the images, our suggested solution involves the u
 - Deniz Gönenç
 - M. Davut Kulaksız
 - Hikmet Güner
+
+## Classification:
+Epoch 1 loss: 0.147
+Epoch 2 loss: 0.089
+Epoch 3 loss: 0.073
+Epoch 4 loss: 0.061
+Epoch 5 loss: 0.051
+Epoch 6 loss: 0.045
+Epoch 7 loss: 0.035
+Epoch 8 loss: 0.033
+Epoch 9 loss: 0.030
+Epoch 10 loss: 0.026
+Validation accuracy: 97.378%
+Test accuracy: 97.239%
+F1 Score: 0.948%
+Precision: 0.959%
+Recall: 0.938%
