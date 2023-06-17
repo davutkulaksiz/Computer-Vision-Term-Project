@@ -2,6 +2,8 @@
 
 This project is a part of the BBM416 course, conducted by the Computer Engineering Department of Hacettepe University. The main objective of this project is to detect fires and smoke using computer vision techniques.
 
+![computer_vision_video_3](https://github.com/davutkulaksiz/Computer-Vision-Term-Project/assets/58954450/540896cf-9d90-48c7-a7a0-517992d96f82)
+
 ## 🚀 Problem Statement
 
 Fire and smoke breakouts can be a major risk to public safety, and early detection is crucial to minimize the damage caused by fires. Traditional fire detection methods can have limitations in terms of accuracy and speed. Therefore, early detection using computer vision techniques can be helpful.
