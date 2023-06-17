@@ -4,7 +4,7 @@ from ultralytics import YOLO
 import cv2
 
 
-video_path = os.path.join('.', 'wildfire.mp4')
+video_path = os.path.join('.', 'forest5.avi')
 
 video_path_out = '{}_out.mp4'.format(video_path)
 
