@@ -3,5 +3,5 @@ train: 'train'
 val: 'test'
 
 names:
-  0: fire
-  1: smoke
+  0: smoke
+  1: fire
