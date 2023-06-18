@@ -4,7 +4,7 @@ from ultralytics import YOLO
 import cv2
 
 
-video_path = os.path.join('.', 'forest5.avi')
+video_path = os.path.join('.', 'pexels-arnav-kainthola-7533265-1920x1080-30fps.mp4')
 
 video_path_out = '{}_out (50 epochs).mp4'.format(video_path)
 
