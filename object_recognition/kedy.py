@@ -4,7 +4,7 @@ from ultralytics import YOLO
 import cv2
 
 
-video_path = os.path.join('.', 'gatto.mp4')
+video_path = os.path.join('.', 'pexels_kedi.mp4')
 
 video_path_out = '{}_out (50 epochs).mp4'.format(video_path)
 
